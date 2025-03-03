@@ -1,4 +1,6 @@
 //Imports
+import createRequire from 'create-require';
+const require = createRequire(import.meta.url)
 const Pool = require('pg').Pool;
 require('dotenv').config()
 
