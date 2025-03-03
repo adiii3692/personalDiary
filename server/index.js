@@ -57,24 +57,30 @@ app.post('/login',async(request,response)=>{
         const username=request.body.username;
         const password = request.body.password;
 
-        const storedUsername = await pool.query('SELECT * FROM login WHERE username=$1',[username]);
-        //Check if valid username
-        if (storedUsername.rows.length==0){
-            return response.json({message:"Enter a valid username",validated:false});
-        }
-        //Get the hashed password
-        const retrievedPassword = storedUsername.rows[0].password;
-        //Verify password:
-        const verifyPassword = await bcrypt.compare(password,retrievedPassword);
+        //Search by username first
+        const getUser = await prisma.user.findUnique({
+            where: {
+                username: username,
+            }
+        })
 
-        //If incorrect password
+        //Verify username
+        if (getUser==null){
+            return response.status(500).json({message: "Incorrect Username",validated:false})
+        }   
+        
+
+        //Verify Password
+        const verifyPassword = await bcrypt.compare(password,getUser.password);
         if (!verifyPassword){
-            return response.json({message:"Invalid Password",validated:false});
+            return response.status(200).json({message: "Inocrrect Password",validated:false})
         }
-        return response.status(200).json({message:"Logged In!",validated:true,user:storedUsername.rows[0]});
+
+        //Success message if found
+        return response.status(200).json({message: "Found User",foundUser:getUser,validated: true})
     } catch (error) {
         console.log(error.message);
-        return response.status(500).send({ message: error.message });
+        return response.status(500).send({ message: "Incorrect Username or Password" });
     }
 });
 
