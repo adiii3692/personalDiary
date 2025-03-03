@@ -5,12 +5,14 @@ const express = require('express')
 import cors from 'cors'
 require('dotenv').config()
 const bodyParser = require('body-parser')
-import { pool, testConnection } from './db.js'
 const bcrypt = require('bcryptjs')
 const { PrismaClient } = require('@prisma/client')
 
 //PORT
 const PORT = process.env.PORT
+
+//Salting for hashing
+const salt = bcrypt.genSaltSync(parseInt(process.env.saltRound));
 
 //Express Middleware
 const app = express()
@@ -22,8 +24,14 @@ const prisma = new PrismaClient()
 
 //Test function to verify prisma connection
 async function testPrismaConnection(){
-    const getUsers = await prisma.user.findMany()
-    console.log("All Users: ",getUsers)
+    const getUsers = await prisma.user.findMany({
+        include: {
+            entries: true,
+            recipes: true,
+            wishlist: true,
+        }
+    })
+    console.log("New User Hopefully: ",getUsers)
 }
 
 //Run App and Check Postgres Connection
