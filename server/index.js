@@ -87,8 +87,12 @@ app.post('/login',async(request,response)=>{
 //Directory to get recipes
 app.get('/recipes',async (request,response)=>{
     try {
-        const  recipes = await pool.query('SELECT * FROM recipes')
-        return response.json({message:"Got recipes",recipes:recipes.rows})
+        const  recipes = await prisma.recipe.findMany({
+            include: {
+                author: true
+            }
+        })
+        return response.json({message:"Got recipes",recipes:recipes})
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });  
@@ -96,12 +100,28 @@ app.get('/recipes',async (request,response)=>{
 })
 
 //Directory to make a recipe
+app.post('/recipe',async (request,response)=>{
+    try {
+        if (!request.body.title ||
+            !request.body.description ||
+            !request.body.content){
+                return response.json({message:"Please enter all fields",validated:false});
+            }
+    } catch (error) {
+        console.log(error.message);
+        return response.status(500).send({ message: error.message });
+    }
+})
 
 //Directory to get wishlist
 app.get('/wishlist',async (request,response)=>{
     try {
-        const  wishlist = await pool.query('SELECT * FROM wishlist')
-        return response.json({message:"Got wishlist",wishlist:wishlist.rows})
+        const  wishlist = await prisma.wishlist.findMany({
+            include: {
+                author: true
+            }
+        })
+        return response.json({message:"Got wishlist",wishlist:wishlist})
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message }); 
