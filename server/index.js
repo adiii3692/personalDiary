@@ -100,13 +100,30 @@ app.get('/recipes',async (request,response)=>{
 })
 
 //Directory to make a recipe
-app.post('/recipe',async (request,response)=>{
+app.post('/recipes/:id',async (request,response)=>{
     try {
         if (!request.body.title ||
             !request.body.description ||
             !request.body.content){
                 return response.json({message:"Please enter all fields",validated:false});
             }
+        
+        const title = request.body.title
+        const description = request.body.description
+        const content = request.body.content
+        
+        const userId = parseInt(request.params.id)
+
+        const createRecipe = await prisma.recipe.create({
+            data: {
+                title: title,
+                content: content,
+                description: description,
+                authorId: userId
+            }
+        })
+
+        return response.status(200).json({message:`Created a Recipe for userId: ${userId}`,createdRecipe:createRecipe})
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
