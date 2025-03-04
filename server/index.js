@@ -21,24 +21,15 @@ app.use(bodyParser.json({limit:'5mb'}))
 
 //Prisma connection
 const prisma = new PrismaClient()
-
-//Test function to verify prisma connection
-async function testPrismaConnection(){
-    const getUsers = await prisma.user.findMany({
-        include: {
-            entries: true,
-            recipes: true,
-            wishlist: true,
-        }
-    })
-    console.log("New User Hopefully: ",getUsers)
+const verifConnection = async ()=>{ 
+    const user = await prisma.user.findMany()
+    console.log('Connection Check: ',user[0].username)
 }
 
 //Run App and Check Postgres Connection
 app.listen(PORT,()=>{
-    // testConnection();
-    testPrismaConnection()
     console.log('Listening to PORT: '+PORT);
+    verifConnection();
 });
 
 //Base directory to verify if api is running

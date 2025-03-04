@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: ./server
+    image: my-diary-server-image
+    container_name: my-diary-server-container
+    ports:
+      - "5656:5656"
+    env_file:
+      - ./server/.env
+    networks:
+      - diary-network
+  frontend:
+    build:
+      context: ./client
+      args:
+        BASE_URL: "http://localhost:5656/"
+    image: my-diary-client-image
+    container_name: my-diary-client-container
+    ports:
+      - "5273:5273"
+    depends_on:
+      - backend
+    environment:
+      - BASE_URL=http://localhost:5656/
+    networks:
+      - diary-network
+
+networks:
+  diary-network:
+    driver: bridge
