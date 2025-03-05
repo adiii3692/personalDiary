@@ -1,24 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.quicksand-light {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+.quicksand-regular {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+.quicksand-medium {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+.quicksand-semibold {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+.quicksand-bold {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.coffee-cup {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.cup {
+  width: 80px;
+  height: 60px;
+  background-color: #6f4e37;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+}
+
+.cup::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #6f4e37;
+  border-radius: 50%;
+}
+
+.handle {
+  width: 20px;
+  height: 30px;
+  background-color: transparent;
+  border: 8px solid #6f4e37;
+  border-radius: 0 20px 20px 0;
+  position: absolute;
+  top: 10px;
+  right: -20px;
+}
+
+.steam {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.steam::before,
+.steam::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 30px;
+  background-color: #d3d3d3;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.steam::before {
+  left: -20px;
+  animation: steam 2s infinite ease-in-out;
+}
+
+.steam::after {
+  right: -20px;
+  animation: steam 2s infinite ease-in-out 0.5s;
+}
+
+@keyframes steam {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  50% {
+    transform: translateY(-10px) scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
 }
