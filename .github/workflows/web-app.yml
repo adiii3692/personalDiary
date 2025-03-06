@@ -1,0 +1,35 @@
+name: Personal Diary
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: My first test job
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:  ./server
+    
+    strategy:
+      matrix:
+        node-version: [21.7.3]
+    
+    env:
+      MODE: "dev"
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js v21.7.3
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Start web server
+        run: npm start

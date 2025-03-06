@@ -1,8 +1,6 @@
 //Imports
-import createRequire from 'create-require'
-const require = createRequire(import.meta.url)
 const express = require('express')
-import cors from 'cors'
+const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser')
 const bcrypt = require('bcryptjs')
@@ -83,7 +81,7 @@ app.get('/recipes',async (request,response)=>{
                 author: true
             }
         })
-        return response.json({message:"Got recipes",recipes:recipes})
+        return response.status(200).json({message:"Got recipes",recipes:recipes})
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });  
@@ -238,3 +236,6 @@ app.put('/wishlist/:wishlistId/:userId', async (request,response)=>{
         return response.status(500).send({ message: error.message });
     } 
 })
+
+//export app for testing
+module.exports = app
