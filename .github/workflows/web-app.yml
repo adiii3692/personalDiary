@@ -1,6 +1,9 @@
 name: Personal Diary
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
