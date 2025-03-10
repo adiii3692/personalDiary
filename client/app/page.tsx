@@ -1,6 +1,22 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import Link from "next/link";
+import { Textarea } from "@/components/ui/textarea"
+import MarkdownPreview from "@/components/markdownPreview";
 
 type Card = {
   title: string;
@@ -15,13 +31,17 @@ export default function Home() {
 
   // Card data
   const cards: Card[] = [
-    { title: 'Recipes', items: recipes },
-    { title: 'Entries', items: entries },
+    { title: 'Recipe', items: recipes },
+    { title: 'Entrie', items: entries },
     { title: 'Wishlist', items: wishlist },
   ];
 
+  //Sample Markdown
+  const [markdown, setMarkdown] = useState<string>("# Hello, **Markdown!**");
+
   return (
     <>
+
       {/* Header */}
       <header className="bg-white shadow-md">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -32,19 +52,18 @@ export default function Home() {
 
           {/* Navigation Menu */}
           <nav className="space-x-8 quicksand-medium">
-            <a className="text-gray-800 hover:text-gray-600">
-              Home
-            </a>
-            <a className="text-gray-800 hover:text-gray-600">
-              My Entries
-            </a>
-            <a className="text-gray-800 hover:text-gray-600">
-              My Wishlist
-            </a>
-            <a className="text-gray-800 hover:text-gray-600">
-              My Recipes
-            </a>
+            <Link href={'/'}><Button>Home</Button></Link>
+            <Link href={'/'}><Button>My Entries</Button></Link>
+            <Link href={'/'}><Button>My Wishlist</Button></Link>
+            <Link href={'/'}><Button>My Recipes</Button></Link>
           </nav>
+
+          {/* Profile Avatar */}
+          <Avatar>
+            <AvatarImage src="https://avatars.githubusercontent.com/u/111661089?s=400&u=c7f42df01aace4d02710a5f2d2509ec143bdf7b4&v=4" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+
         </div>
       </header>
 
@@ -55,7 +74,9 @@ export default function Home() {
             {cards.map((card, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 {/* Card Title */}
-                <h2 className="text-xl quicksand-bold mb-4 text-gray-800">{card.title}</h2>
+                <div className="w-full justify-center items-center">
+                  <h2 className="text-xl quicksand-bold mb-4 text-gray-800 text-center">{card.title}</h2>
+                </div>
 
                 {/* List of Items */}
                 <ul className="quicksand-medium space-y-2 mb-4">
@@ -66,10 +87,64 @@ export default function Home() {
                   ))}
                 </ul>
 
-                {/* Add Button */}
-                <button className="w-full py-2 bg-blue-500 quicksand-semibold text-white rounded-md hover:bg-blue-600 transition-colors">
-                  Add Items
-                </button>
+                {/* Add Item Form and Button */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      {/* Button */}
+                      <Button className="w-full py-2 quicksand-bold text-white rounded-md">Add Item</Button>
+                    </DialogTrigger>
+                    {/* Item Submit Form */}
+                    <DialogContent className="sm:max-w-[425px] quicksand-bold">
+                      <DialogHeader className="justify-center items-center">
+                        <DialogTitle>Add Item</DialogTitle>
+                        <DialogDescription>
+                          Add a new '{card.title}' item
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="flex-col  gap-4 py-4">
+                        {/* Title */}
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="title" className="text-right">
+                            Title
+                          </Label>
+                          <Input id="title" defaultValue="Title" className="col-span-3" />
+                        </div>
+                        {/* Content */}
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="content" className="text-right">
+                            Content
+                          </Label>
+                          <Textarea id="content" className="col-span-3" value={markdown} onChange={(e)=>{
+                            setMarkdown(e.target.value)
+                          }}/>
+                        </div>
+                        {/* Markdown Preview */}
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="preview" className="text-right">
+                            Preview
+                          </Label>
+                          <div className="col-span-3">
+                            <MarkdownPreview markdown={markdown} />
+                          </div>
+                        </div>
+                        { (card.title) === 'Recipe' ? (
+                          <>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="description" className="text-right">
+                              Description
+                              </Label>
+                              <Input id="description" defaultValue="Description" className="col-span-3" />
+                            </div>
+                          </>
+                        ) : 
+                          card.title === 'Entrie' ? 'Do Entrie Action' : 
+                          card.title === 'Wishlist' ? 'Do Wishlist Action' : 'Default Action' }
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit">Save changes</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
               </div>
             ))}
           </div>

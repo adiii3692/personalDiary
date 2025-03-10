@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  server-test:
     name: My first test job
     runs-on: ubuntu-latest
     defaults:
@@ -36,3 +36,40 @@ jobs:
           PORT: ${{secrets.PORT}}
           saltRound: ${{secrets.SALTROUND}}
         run: npm test
+
+  client-test:
+    name: Client Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:  ./client
+    
+    strategy:
+      matrix:
+        node-version: [21.7.3]
+    
+    environment: dev
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js v21.7.3
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npm test
+      
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
