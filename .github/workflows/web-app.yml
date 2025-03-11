@@ -10,7 +10,7 @@ on:
 
 jobs:
   server-test:
-    name: My first test job
+    name: Server-side API Endpoint Testing
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,7 +41,7 @@ jobs:
         run: npm test
 
   client-test:
-    name: Client Test
+    name: Client Playwright Tests
     runs-on: ubuntu-latest
     defaults:
       run:
