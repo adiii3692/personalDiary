@@ -40,7 +40,7 @@ const CardsList = () => {
 
     return(
         <>
-            <div className="grid w-full h-[50%] grid-cols-1 md:grid-cols-3 gap-6 my-8 mx-8" data-testid="card-component">
+            <div className="grid w-full h-[40%] grid-cols-1 md:grid-cols-3 gap-6 my-8" data-testid="card-component">
                 {cards.map((card, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-md p-6">
                     {/* Card Title */}

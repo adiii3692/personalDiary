@@ -22,7 +22,7 @@ const Header = ({userLogin,setUserLogin}: UserLogin) => {
             {/* Navigation Menu */}
             <nav className="space-x-8 quicksand-medium">
                 <Link href={'/'}><Button>Home</Button></Link>
-                <Link href={'/'}><Button>My Entries</Button></Link>
+                <Link href={'/entrie'}><Button>My Entries</Button></Link>
                 <Link href={'/'}><Button>My Wishlist</Button></Link>
                 <Link href={'/'}><Button>My Recipes</Button></Link>
             </nav>
