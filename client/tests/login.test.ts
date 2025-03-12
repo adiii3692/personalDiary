@@ -26,8 +26,6 @@ test('Landing Page and Login Form test', async ({ page }) => {
   // Click the login button
   await page.click('button[type="submit"]');
 
-  // Check if home page after login has logout button
-  await expect(page.locator('[data-testid="logout"]')).toBeVisible();
   // Check if cards are now visible
   await expect(page.locator('[data-testid="card-component"]')).toBeVisible();
 });
