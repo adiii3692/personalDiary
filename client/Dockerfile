@@ -1,7 +1,7 @@
 FROM node:23-alpine
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --force
 COPY . .
 RUN npm run build
 EXPOSE 5273

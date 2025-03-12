@@ -68,6 +68,12 @@ jobs:
         run: npx playwright install --force --with-deps
 
       - name: Run Playwright tests
+        env:
+            PORT: ${{secrets.CLIENT_PORT}}
+            NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
+            NEXT_PUBLIC_CLIENT_URL: ${{secrets.NEXT_PUBLIC_CLIENT_URL}}
+            NEXT_PUBLIC_TEST_USER: ${{secrets.NEXT_PUBLIC_TEST_USER}}
+            NEXT_PUBLIC_TEST_PASS: ${{secrets.NEXT_PUBLIC_TEST_PASS}}
         run: npm test
       
       - uses: actions/upload-artifact@v4

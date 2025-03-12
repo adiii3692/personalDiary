@@ -30,6 +30,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@next/env": "^15.2.2",
     "@playwright/test": "^1.51.0",
     "@tailwindcss/postcss": "^4",
     "@types/markdown-it": "^14.1.2",
