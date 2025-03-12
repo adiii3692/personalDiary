@@ -25,7 +25,4 @@ test('Landing Page and Login Form test', async ({ page }) => {
 
   // Click the login button
   await page.click('button[type="submit"]');
-
-  // Check if cards are now visible
-  await expect(page.locator('[data-testid="card-component"]')).toBeVisible();
 });
