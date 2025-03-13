@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -11,17 +11,91 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea"
 import MarkdownPreview from "@/components/markdownPreview";
 
+interface Author{
+    id: number,
+    username: string,
+    password: string
+}
+
+interface Recipe{
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    title: string,
+    description: string,
+    content: string,
+    authorId: number,
+    author: Author
+}
+
+interface Wishlist{
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    title: string,
+    description: string,
+    content: string,
+    imageUrl: string,
+    authorId: number,
+    author: Author
+}
+
+interface Entrie{
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    title: string,
+    content: string,
+    imageUrl: string,
+    authorId: number,
+    author: Author
+}
+
 type Card = {
     title: string;
-    items: string[];
+    items: Recipe[] | Wishlist[] | Entrie[];
 };
 
-
 const CardsList = () => {
+
+    const [recipeArray, setRecipeArray] = useState<Recipe[]>([])
+    const [wishlistArray, setWishlistArray] = useState<Wishlist[]>([])
+    const [entrieArray, setEntrieArray] = useState<Entrie[]>([])
+
+    const fetchRecipes = async () => {
+        const url : string = `${process.env.NEXT_PUBLIC_API_URL}`+'recipes'
+        try {
+            const response = await fetch(url);
+            if (!response.ok && response.status!=500) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+            
+            const recipeJson = await response.json();
+            console.log(recipeJson.recipes);
+            setRecipeArray(recipeJson.recipes)
+          } catch (error) {
+            console.log(error);
+          }
+    }
+
+    const fetchWishlist = async () => {
+        const url : string = `${process.env.NEXT_PUBLIC_API_URL}`+'wishlist'
+        try {
+            const response = await fetch(url);
+            if (!response.ok && response.status!=500) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+            
+            const wishlistJson = await response.json();
+            console.log(wishlistJson.wishlist);
+            setWishlistArray(wishlistJson.wishlist)
+          } catch (error) {
+            console.log(error);
+          }
+    }
 
     //Sample Markdown
     const [markdown, setMarkdown] = useState<string>("# Sample, **Markdown!**");
@@ -33,10 +107,20 @@ const CardsList = () => {
 
     // Card data
     const cards: Card[] = [
-        { title: 'Recipe', items: recipes },
-        { title: 'Entrie', items: entries },
-        { title: 'Wishlist', items: wishlist },
+        { title: 'Recipe', items: recipeArray },
+        { title: 'Entrie', items: entrieArray },
+        { title: 'Wishlist', items: wishlistArray },
     ];
+    
+    useEffect(()=>{
+        fetchRecipes()
+        fetchWishlist()
+    },[])
+
+    useEffect(()=>{
+        console.log("Recipe array: ",recipeArray)
+        console.log("Wishlist array: ",wishlistArray)
+    },[recipeArray,wishlistArray])
 
     return(
         <>
@@ -52,7 +136,7 @@ const CardsList = () => {
                     <ul className="quicksand-medium space-y-2 mb-4">
                     {card.items.map((item, itemIndex) => (
                         <li key={itemIndex} className="text-gray-600">
-                        {item}
+                            {item.title}
                         </li>
                     ))}
                     </ul>
