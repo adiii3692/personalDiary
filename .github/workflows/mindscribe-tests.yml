@@ -35,6 +35,7 @@ jobs:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
           PORT: ${{secrets.PORT}}
           saltRound: ${{secrets.SALTROUND}}
+          sampleUserId: ${{secrets.SAMPLEUSERID}}
         run: npm test
 
   client-test:
