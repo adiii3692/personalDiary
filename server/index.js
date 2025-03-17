@@ -77,6 +77,9 @@ app.post('/login',async(request,response)=>{
 app.get('/entries',async (request,response)=>{
     try {
         const  entries = await prisma.entry.findMany({
+            orderBy: {
+                updatedAt: 'desc'
+            },
             include: {
                 author: true
             }

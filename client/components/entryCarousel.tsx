@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import MarkdownPreview from "@/components/markdownPreview";
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 //  Author Interface
 interface Author{
@@ -37,11 +38,13 @@ interface Entrie{
 }
 
 const CardCarousel = () => {
+    //  Entrie Array
     const [entrieArray, setEntrieArray] = React.useState<Entrie[]>([])
 
     //Sample Markdown
     const [markdown, setMarkdown] = React.useState<string>("# Sample, **Markdown!**");
 
+    //  Method to get entries
     const fetchEntries = async () => {
       const url : string = `${process.env.NEXT_PUBLIC_API_URL}`+'entries'
       try {
@@ -58,29 +61,53 @@ const CardCarousel = () => {
         }
     }
 
+    //  Router
+    const router = useRouter()
+
+    //  Method to update Entrie
     const updateEntrie = async (entrieId:number) => {
       const url : string = `${process.env.NEXT_PUBLIC_API_URL}`+'entries/'+`${entrieId}/`+`${localStorage.getItem('user_id')}`
 
+      const containerDiv = document.getElementById(`${entrieId}`)
+      const inputs = containerDiv?.querySelectorAll('input')
+
+      const content = containerDiv?.querySelector('textarea')?.value
+      let title = null
+      let imageUrl = null
+
+      inputs?.forEach((input,index) => {
+        if (index==0){
+          title = input.value
+        }else{
+          imageUrl = input.value
+        }
+      })
+      
       const entrie = {
-        title:
+        title: title,
+        content: content,
+        imageUrl: imageUrl
       }
+
+      console.log("URL: ",url)
+      console.log("Entrie: ",entrie)
 
       try {
         const response = await fetch(url, {
-          method: "POST",
+          method: "PUT",
           headers: {
               "Content-Type": "application/json",
           },
           mode: "cors",
-          body: JSON.stringify(user)
+          body: JSON.stringify(entrie)
       });
         if (!response.ok && response.status!=500) {
           throw new Error(`Response status: ${response.status}`);
         }
         
-        const entriesJson = await response.json();
-        console.log(entriesJson.entries);
-        setEntrieArray(entriesJson.entries)
+        const responseJson = await response.json();
+        console.log(responseJson.updatedEntrie);
+        router.refresh()
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +128,7 @@ const CardCarousel = () => {
               <DialogTrigger asChild>
                   <div className="flex w-full">
                     <div className="w-15/100 p-5 bg-[#C5A880]">
-                      <Button>{new Date(entrie.createdAt).toLocaleDateString("en-US", { 
+                      <Button>{new Date(entrie.updatedAt).toLocaleDateString("en-US", { 
                           year: "numeric", 
                           month: "short", 
                           day: "numeric"
@@ -121,7 +148,7 @@ const CardCarousel = () => {
                       Update an 'Entrie' item
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex-col gap-4 py-4">
+                <div className="flex-col gap-4 py-4" id={`${entrie.id}`}>
                     {/* Title */}
                     <div className="grid grid-cols-4 items-center gap-4 my-4">
                       <Label htmlFor="title" className="text-right">
@@ -158,7 +185,7 @@ const CardCarousel = () => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <Button type="submit" onClick={()=>{updateEntrie(entrie.id)}}>Save changes</Button>
                 </DialogFooter>
               </DialogContent>
           </Dialog>

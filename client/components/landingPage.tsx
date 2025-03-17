@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const LandingPage = () =>{
 
@@ -35,7 +35,6 @@ const LandingPage = () =>{
                 headers: {
                     "Content-Type": "application/json",
                 },
-                mode: "cors",
                 body: JSON.stringify(user)
             });
             if (!response.ok && response.status!=500) {
