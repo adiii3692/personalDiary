@@ -97,13 +97,24 @@ const CardsList = () => {
           }
     }
 
+    const fetchEntries = async () => {
+        const url : string = `${process.env.NEXT_PUBLIC_API_URL}`+'entries'
+        try {
+            const response = await fetch(url);
+            if (!response.ok && response.status!=500) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+            
+            const entriesJson = await response.json();
+            console.log(entriesJson.entries);
+            setEntrieArray(entriesJson.entries)
+          } catch (error) {
+            console.log(error);
+          }
+    }
+
     //Sample Markdown
     const [markdown, setMarkdown] = useState<string>("# Sample, **Markdown!**");
-
-    // State for each card's items
-    const [recipes, setRecipes] = useState<string[]>(['Pasta', 'Pizza', 'Salad']);
-    const [entries, setEntries] = useState<string[]>(['Day 1', 'Day 2', 'Day 3']);
-    const [wishlist, setWishlist] = useState<string[]>(['Book', 'Headphones', 'Shoes']);
 
     // Card data
     const cards: Card[] = [
@@ -115,12 +126,14 @@ const CardsList = () => {
     useEffect(()=>{
         fetchRecipes()
         fetchWishlist()
+        fetchEntries()
     },[])
 
     useEffect(()=>{
         console.log("Recipe array: ",recipeArray)
         console.log("Wishlist array: ",wishlistArray)
-    },[recipeArray,wishlistArray])
+        console.log("Entries array: ",entrieArray)
+    },[recipeArray,wishlistArray,entrieArray])
 
     return(
         <>
